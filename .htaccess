@@ -6,10 +6,6 @@
   RewriteCond %{HTTP:Authorization} .
   RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
   
-  # Handle CORS preflight requests
-  RewriteCond %{REQUEST_METHOD} OPTIONS
-  RewriteRule ^(.*)$ $1 [R=200,L]
-  
   # Don't rewrite files or directories
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d
@@ -17,19 +13,6 @@
   
   # Rewrite everything else to index.html to allow HTML5 state links
   RewriteRule ^ index.html [L]
-</IfModule>
-
-# CORS Headers - Allow API requests
-<IfModule mod_headers.c>
-  # Allow specific origins
-  SetEnvIf Origin "^https://api\.shrutratna\.precisercu\.com$" CORS_ALLOW_ORIGIN=$0
-  Header always set Access-Control-Allow-Origin %{CORS_ALLOW_ORIGIN}e env=CORS_ALLOW_ORIGIN
-  
-  # For preflight requests
-  Header always set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, PATCH, OPTIONS" env=CORS_ALLOW_ORIGIN
-  Header always set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With, Accept, Origin" env=CORS_ALLOW_ORIGIN
-  Header always set Access-Control-Allow-Credentials "true" env=CORS_ALLOW_ORIGIN
-  Header always set Access-Control-Max-Age "86400" env=CORS_ALLOW_ORIGIN
 </IfModule>
 
 # Disable directory browsing
